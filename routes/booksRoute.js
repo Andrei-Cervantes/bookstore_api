@@ -4,11 +4,11 @@ import booksController from "../controllers/booksController.js";
 const router = express.Router();
 
 // Destructure Controllers
-const { saveBook, getAllBooks, getSingleBook, updateBook, deleteBook } =
+const { createBook, getAllBooks, getSingleBook, updateBook, deleteBook } =
   booksController();
 
 // Route for Save a new book
-router.post("/", saveBook);
+router.post("/", createBook);
 
 // Route for Get All Books from database
 router.get("/", getAllBooks);

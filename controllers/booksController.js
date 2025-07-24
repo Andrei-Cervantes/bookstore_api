@@ -2,7 +2,7 @@ import { Book } from "../models/bookModel.js";
 
 const booksController = () => {
   // Save a new book
-  const saveBook = async (req, res) => {
+  const createBook = async (req, res) => {
     try {
       if (!req.body.title || !req.body.author || !req.body.publishYear) {
         return res.status(400).send({
@@ -95,7 +95,7 @@ const booksController = () => {
     }
   };
 
-  return { saveBook, getAllBooks, getSingleBook, updateBook, deleteBook };
+  return { createBook, getAllBooks, getSingleBook, updateBook, deleteBook };
 };
 
 export default booksController;
