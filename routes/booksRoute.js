@@ -11,7 +11,10 @@ const { createBook, getAllBooks, getSingleBook, updateBook, deleteBook } =
 router.post("/", createBook);
 
 // Route for Get All Books from database
+// Refactor to get all active and not archived books
 router.get("/", getAllBooks);
+
+// Admin Route for getting all books
 
 // Route for Get One Book from database
 router.get("/:id", getSingleBook);
