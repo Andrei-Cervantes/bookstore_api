@@ -51,4 +51,7 @@ const bookSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
+bookSchema.index({ title: 1, author: 1, publishYear: 1 }, { unique: true });
+
 export const Book = mongoose.model("Book", bookSchema);

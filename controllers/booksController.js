@@ -1,20 +1,35 @@
 import { Book } from "../models/bookModel.js";
+import { successResponse, errorResponse } from "../utils/formatResponse.js";
 
 const booksController = () => {
   // Save a new book
   const createBook = async (req, res) => {
     try {
+      // check first if book with title, author, and publish year exists
+      const bookExists = await Book.findOne({
+        title: req.body.title,
+        author: req.body.author,
+        publishYear: req.body.publishYear,
+      });
+
+      if (bookExists) {
+        return errorResponse(res, 400, "Book already exists");
+      }
+
+      // create if book does not exist
       const book = await Book.create(req.body);
-      return res.status(201).send(book);
+      return successResponse(res, 201, "Book created successfully", book);
     } catch (error) {
       if (error.name === "ValidationError") {
-        return res.status(400).send({
-          message: "Validation failed",
-          errors: Object.values(error.errors).map((err) => err.message),
-        });
+        return errorResponse(
+          res,
+          400,
+          "Validation failed",
+          Object.values(error.errors).map((err) => err.message)
+        );
       }
       console.log(error.message);
-      res.status(500).send({ message: error.message });
+      return errorResponse(res, 500, error.message);
     }
   };
 
