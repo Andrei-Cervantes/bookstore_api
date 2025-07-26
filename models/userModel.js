@@ -20,9 +20,9 @@ const userSchema = mongoose.Schema(
       enum: ["user", "admin", "librarian"],
       default: "user",
     },
-    isActive: {
+    isVerified: {
       type: Boolean,
-      default: true,
+      default: true, // change to false after email verification
     },
   },
   {

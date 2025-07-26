@@ -31,10 +31,11 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use("/books", booksRoute);
-app.use("/users", usersRoute);
-app.use("/auth", authRoute);
-app.use("/borrow", borrowRoute);
-app.use("/bookmarks", bookmarksRoute);
-app.use("/notes", notesRoute);
-app.use("/reviews", reviewsRoute);
+const apiVersion = "/api/v1";
+app.use(`${apiVersion}/books`, booksRoute);
+app.use(`${apiVersion}/users`, usersRoute);
+app.use(`${apiVersion}/auth`, authRoute);
+app.use(`${apiVersion}/borrow`, borrowRoute);
+app.use(`${apiVersion}/bookmarks`, bookmarksRoute);
+app.use(`${apiVersion}/notes`, notesRoute);
+app.use(`${apiVersion}/reviews`, reviewsRoute);
