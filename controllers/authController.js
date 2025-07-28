@@ -1,6 +1,9 @@
 import { User } from "../models/userModel.js";
 import { successResponse, errorResponse } from "../utils/formatResponse.js";
-import generateToken from "../utils/generateToken.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../utils/generateToken.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import sendEmail from "../utils/sendEmail.js";
@@ -109,8 +112,8 @@ const authController = () => {
       }
 
       // generate tokens
-      const accessToken = generateToken(user._id);
-      const refreshToken = generateToken(user._id);
+      const accessToken = generateAccessToken(user._id);
+      const refreshToken = generateRefreshToken(user._id);
 
       // update user with refresh token
       user.refreshToken = refreshToken;
