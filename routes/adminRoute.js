@@ -1,0 +1,22 @@
+import express from "express";
+import usersController from "../controllers/adminController.js";
+
+const router = express.Router();
+
+// Destructure controller
+const { getAllUsers, getSingleUser, setUserRole, deleteUser } =
+  usersController();
+
+// Admin Route for getting all users
+router.get("/users", getAllUsers);
+
+// Admin Route for getting a single user
+router.get("/users/:id", getSingleUser);
+
+// Admin Route for setting user role (user, librarian, admin)
+router.put("/users/:id/role", setUserRole);
+
+// Admin Route for deleting a user
+router.delete("/users/:id", deleteUser);
+
+export default router;

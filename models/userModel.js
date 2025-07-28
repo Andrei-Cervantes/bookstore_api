@@ -22,7 +22,25 @@ const userSchema = mongoose.Schema(
     },
     isVerified: {
       type: Boolean,
-      default: true, // change to false after email verification
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+    },
+    resetPasswordToken: {
+      type: String,
+    },
+    resetPasswordExpires: {
+      type: Date,
+    },
+    avatar: {
+      type: String,
+      default: "",
+    },
+    isActive: {
+      // For soft delete or account suspension
+      type: Boolean,
+      default: true,
     },
   },
   {

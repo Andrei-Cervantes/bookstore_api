@@ -5,7 +5,7 @@ import cors from "cors";
 
 // Import Routes
 import booksRoute from "./routes/booksRoute.js";
-import usersRoute from "./routes/usersRoute.js";
+import adminRoute from "./routes/adminRoute.js";
 import authRoute from "./routes/authRoute.js";
 import borrowRoute from "./routes/borrowRoute.js";
 import bookmarksRoute from "./routes/bookmarksRoute.js";
@@ -33,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 const apiVersion = "/api/v1";
 app.use(`${apiVersion}/books`, booksRoute);
-app.use(`${apiVersion}/users`, usersRoute);
+app.use(`${apiVersion}/admin`, adminRoute);
 app.use(`${apiVersion}/auth`, authRoute);
 app.use(`${apiVersion}/borrow`, borrowRoute);
 app.use(`${apiVersion}/bookmarks`, bookmarksRoute);
