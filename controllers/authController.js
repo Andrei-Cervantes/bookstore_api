@@ -1,6 +1,7 @@
 import { User } from "../models/userModel.js";
 import { successResponse, errorResponse } from "../utils/formatResponse.js";
 import {
+  generateToken,
   generateAccessToken,
   generateRefreshToken,
 } from "../utils/generateToken.js";
@@ -190,13 +191,37 @@ const authController = () => {
 
       return successResponse(res, 200, "Verification email sent successfully");
     } catch (error) {
+      return errorResponse(res, 500, error.message);
+    }
+  };
+
+  const getCurrentUser = async (req, res) => {
+    try {
+      const user = req.user;
+      return successResponse(res, 200, "User fetched successfully", {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isVerified: user.isVerified,
+        isActive: user.isActive,
+      });
+    } catch (error) {
       return errorResponse(res, 500, "Internal server error");
     }
   };
 
-  const getCurrentUser = async (req, res) => {};
+  const logout = async (req, res) => {
+    try {
+      const user = req.user;
+      user.refreshToken = undefined;
+      await user.save();
 
-  const logout = async (req, res) => {};
+      return successResponse(res, 200, "Logged out successfully");
+    } catch (error) {
+      return errorResponse(res, 500, "Internal server error");
+    }
+  };
 
   return {
     register,

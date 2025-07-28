@@ -1,8 +1,6 @@
 import nodemailer from "nodemailer";
 import { EMAIL_USER, EMAIL_PASS, SMTP_HOST, SMTP_PORT } from "../config.js";
 
-console.log(EMAIL_USER, EMAIL_PASS);
-
 const sendEmail = async (email, subject, text) => {
   const transporter = nodemailer.createTransport({
     host: SMTP_HOST,

@@ -1,5 +1,6 @@
 import express from "express";
 import authController from "../controllers/authController.js";
+import { requireAuth } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -43,12 +44,12 @@ router.post("/resend-verification-email", resendVerificationEmail);
 // router.post("/change-password", changePassword);
 
 // Route to get current user details (authenticated route)
-router.get("/me", getCurrentUser);
+router.get("/me", requireAuth, getCurrentUser);
 
 // Route to update user details (authenticated route)
 // router.put("/me", updateUser);
 
 // Route to logout current user (authenticated route)
-router.post("/logout", logout);
+router.post("/logout", requireAuth, logout);
 
 export default router;

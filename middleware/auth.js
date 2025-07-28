@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import User from "../models/userModel.js";
-import { JWT_SECRET } from "../config";
+import { User } from "../models/userModel.js";
+import { JWT_SECRET } from "../config.js";
 import { errorResponse } from "../utils/formatResponse.js";
 
 export const requireAuth = async (req, res, next) => {
