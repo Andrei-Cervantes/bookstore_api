@@ -75,7 +75,64 @@ const authController = () => {
     }
   };
 
-  const login = async (req, res) => {};
+  const login = async (req, res) => {
+    try {
+      const { email, password } = req.body;
+
+      if (!email || !password) {
+        return errorResponse(res, 400, "Email and password are required");
+      }
+
+      if (!validator.isEmail(email)) {
+        return errorResponse(res, 400, "Invalid email");
+      }
+
+      // check if email exists
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        return errorResponse(res, 400, "User not found");
+      }
+
+      if (!user.isVerified) {
+        return errorResponse(res, 400, "Email not verified");
+      }
+
+      if (!user.isActive) {
+        return errorResponse(res, 400, "Account inactive");
+      }
+
+      // check if password is correct
+      const isPasswordCorrect = await bcrypt.compare(password, user.password);
+      if (!isPasswordCorrect) {
+        return errorResponse(res, 400, "Invalid password");
+      }
+
+      // generate tokens
+      const accessToken = generateToken(user._id);
+      const refreshToken = generateToken(user._id);
+
+      // update user with refresh token
+      user.refreshToken = refreshToken;
+      await user.save();
+
+      // send response
+      return successResponse(res, 200, "Login successful", {
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isVerified: user.isVerified,
+        isActive: user.isActive,
+        avatar: user.avatar,
+        tokens: {
+          accessToken,
+          refreshToken,
+        },
+      });
+    } catch (error) {
+      return errorResponse(res, 500, "Internal server error");
+    }
+  };
 
   const verifyEmail = async (req, res) => {
     const { token } = req.params;
