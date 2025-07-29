@@ -211,6 +211,48 @@ const authController = () => {
     }
   };
 
+  const updateUser = async (req, res) => {
+    try {
+      const user = await User.findById(req.user._id);
+
+      const { name, email, currentPassword, newPassword } = req.body;
+
+      if (name?.trim()) {
+        user.name = name.trim();
+      }
+
+      if (email && email !== user.email) {
+        const emailExists = await User.findOne({ email });
+        if (emailExists) {
+          return errorResponse(res, 400, "Email already exists");
+        }
+        user.email = email;
+      }
+
+      if (newPassword) {
+        if (!currentPassword) {
+          return errorResponse(res, 400, "Current password is required");
+        }
+
+        const isPasswordCorrect = await bcrypt.compare(
+          currentPassword,
+          user.password
+        );
+
+        if (!isPasswordCorrect) {
+          return errorResponse(res, 401, "Unauthorized, wrong password");
+        }
+
+        user.password = await bcrypt.hash(newPassword, 10);
+      }
+
+      await user.save();
+      return successResponse(res, 200, "User updated successfully");
+    } catch (error) {
+      return errorResponse(res, 500, "Internal server error");
+    }
+  };
+
   const logout = async (req, res) => {
     try {
       const user = req.user;
@@ -218,32 +260,6 @@ const authController = () => {
       await user.save();
 
       return successResponse(res, 200, "Logged out successfully");
-    } catch (error) {
-      return errorResponse(res, 500, "Internal server error");
-    }
-  };
-
-  const updateUser = async (req, res) => {
-    try {
-      const user = req.user;
-
-      const { name, email, password } = req.body;
-
-      if (name) {
-        user.name = name;
-      }
-
-      if (email) {
-        user.email = email;
-      }
-
-      if (password) {
-        user.password = await bcrypt.hash(password, 10);
-      }
-
-      await user.save();
-
-      return successResponse(res, 200, "User updated successfully");
     } catch (error) {
       return errorResponse(res, 500, "Internal server error");
     }
