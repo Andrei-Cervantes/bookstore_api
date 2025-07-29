@@ -197,7 +197,7 @@ const authController = () => {
 
   const getCurrentUser = async (req, res) => {
     try {
-      const user = req.user;
+      const user = await User.findById(req.user._id);
       return successResponse(res, 200, "User fetched successfully", {
         id: user._id,
         name: user.name,
