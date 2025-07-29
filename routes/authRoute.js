@@ -16,7 +16,7 @@ const {
   // resetPassword,
   // refreshToken,
   // changePassword,
-  // updateUser,
+  updateUser,
 } = authController();
 
 // Register Route
@@ -47,7 +47,7 @@ router.post("/resend-verification-email", resendVerificationEmail);
 router.get("/me", requireAuth, getCurrentUser);
 
 // Route to update user details (authenticated route)
-// router.put("/me", updateUser);
+router.put("/me", requireAuth, updateUser);
 
 // Route to logout current user (authenticated route)
 router.post("/logout", requireAuth, logout);

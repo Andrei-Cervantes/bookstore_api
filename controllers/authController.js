@@ -223,12 +223,39 @@ const authController = () => {
     }
   };
 
+  const updateUser = async (req, res) => {
+    try {
+      const user = req.user;
+
+      const { name, email, password } = req.body;
+
+      if (name) {
+        user.name = name;
+      }
+
+      if (email) {
+        user.email = email;
+      }
+
+      if (password) {
+        user.password = await bcrypt.hash(password, 10);
+      }
+
+      await user.save();
+
+      return successResponse(res, 200, "User updated successfully");
+    } catch (error) {
+      return errorResponse(res, 500, "Internal server error");
+    }
+  };
+
   return {
     register,
     login,
     verifyEmail,
     resendVerificationEmail,
     getCurrentUser,
+    updateUser,
     logout,
   };
 };
