@@ -12,7 +12,7 @@ const {
   getCurrentUser,
   logout,
   resendVerificationEmail,
-  // forgotPassword,
+  forgotPassword,
   // resetPassword,
   // refreshToken,
   // changePassword,
@@ -32,7 +32,7 @@ router.get("/verify-email/:token", verifyEmail);
 router.post("/resend-verification-email", resendVerificationEmail);
 
 // Route for forgot password
-// router.post("/forgot-password", forgotPassword);
+router.post("/forgot-password", forgotPassword);
 
 // Route for reset password
 // router.post("/reset-password/:token", resetPassword);

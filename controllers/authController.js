@@ -195,6 +195,49 @@ const authController = () => {
     }
   };
 
+  const forgotPassword = async (req, res) => {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        return errorResponse(res, 400, "Email is required");
+      }
+
+      if (!validator.isEmail(email)) {
+        return errorResponse(res, 400, "Invalid email");
+      }
+
+      const user = await User.findOne({ email });
+      if (!user) {
+        // avoid leaking information about the existence of the email
+        return successResponse(
+          res,
+          200,
+          "If a user with this email exists, a reset password email has been sent"
+        );
+      }
+
+      const resetToken = generateToken(user._id); // 15 mins token
+      user.resetPasswordToken = resetToken;
+      await user.save();
+
+      await sendEmail(
+        email,
+        "Reset your password",
+        `Click the link to reset your password: ${process.env.BASE_URL}/reset-password/${resetToken}`
+      );
+
+      return successResponse(
+        res,
+        200,
+        "If a user with this email exists, a reset password email has been sent"
+      );
+    } catch (error) {
+      console.log(error.message);
+      return errorResponse(res, 500, "Internal server error");
+    }
+  };
+
   const getCurrentUser = async (req, res) => {
     try {
       const user = await User.findById(req.user._id);
@@ -270,6 +313,7 @@ const authController = () => {
     login,
     verifyEmail,
     resendVerificationEmail,
+    forgotPassword,
     getCurrentUser,
     updateUser,
     logout,
