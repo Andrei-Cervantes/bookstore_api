@@ -15,7 +15,7 @@ const {
   forgotPassword,
   resetPassword,
   // refreshToken,
-  // changePassword,
+  changePassword,
   updateUser,
 } = authController();
 
@@ -41,7 +41,7 @@ router.post("/reset-password/:token", resetPassword);
 // router.post("/refresh-token", refreshToken);
 
 // Route to change password (authenticated route)
-// router.post("/change-password", changePassword);
+router.post("/change-password", requireAuth, changePassword);
 
 // Route to get current user details (authenticated route)
 router.get("/me", requireAuth, getCurrentUser);

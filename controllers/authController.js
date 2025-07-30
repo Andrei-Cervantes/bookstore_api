@@ -278,6 +278,47 @@ const authController = () => {
     }
   };
 
+  const changePassword = async (req, res) => {
+    try {
+      const user = await User.findById(req.user._id);
+
+      const { currentPassword, newPassword } = req.body;
+
+      if (!currentPassword || !newPassword) {
+        return errorResponse(
+          res,
+          400,
+          "Current password and new password are required"
+        );
+      }
+
+      if (currentPassword === newPassword) {
+        return errorResponse(
+          res,
+          400,
+          "New password must be different from current password"
+        );
+      }
+
+      const isPasswordCorrect = await bcrypt.compare(
+        currentPassword,
+        user.password
+      );
+
+      if (!isPasswordCorrect) {
+        return errorResponse(res, 401, "Unauthorized, wrong password");
+      }
+
+      user.password = await bcrypt.hash(newPassword, 10);
+      await user.save();
+
+      return successResponse(res, 200, "Password changed successfully");
+    } catch (error) {
+      console.log(error.message);
+      return errorResponse(res, 500, "Internal server error");
+    }
+  };
+
   const getCurrentUser = async (req, res) => {
     try {
       const user = await User.findById(req.user._id);
@@ -355,6 +396,7 @@ const authController = () => {
     resendVerificationEmail,
     forgotPassword,
     resetPassword,
+    changePassword,
     getCurrentUser,
     updateUser,
     logout,
