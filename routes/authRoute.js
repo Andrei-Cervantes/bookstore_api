@@ -13,7 +13,7 @@ const {
   logout,
   resendVerificationEmail,
   forgotPassword,
-  // resetPassword,
+  resetPassword,
   // refreshToken,
   // changePassword,
   updateUser,
@@ -35,7 +35,7 @@ router.post("/resend-verification-email", resendVerificationEmail);
 router.post("/forgot-password", forgotPassword);
 
 // Route for reset password
-// router.post("/reset-password/:token", resetPassword);
+router.post("/reset-password/:token", resetPassword);
 
 // Route to refresh token (authenticated route)
 // router.post("/refresh-token", refreshToken);

@@ -9,6 +9,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import sendEmail from "../utils/sendEmail.js";
 import validator from "validator";
+import { JWT_SECRET } from "../config.js";
 
 // bcrypt configurations
 // const saltRounds = 10;
@@ -219,6 +220,7 @@ const authController = () => {
 
       const resetToken = generateToken(user._id); // 15 mins token
       user.resetPasswordToken = resetToken;
+      user.resetPasswordExpires = Date.now() + 15 * 60 * 1000; // 15 mins
       await user.save();
 
       await sendEmail(
@@ -232,6 +234,44 @@ const authController = () => {
         200,
         "If a user with this email exists, a reset password email has been sent"
       );
+    } catch (error) {
+      console.log(error.message);
+      return errorResponse(res, 500, "Internal server error");
+    }
+  };
+
+  const resetPassword = async (req, res) => {
+    try {
+      const { token, password } = req.body;
+
+      if (!token || !password) {
+        return errorResponse(res, 400, "Token and password are required");
+      }
+
+      // decode token and check if it is valid
+      let decoded;
+      try {
+        decoded = jwt.verify(token, JWT_SECRET);
+      } catch (err) {
+        return errorResponse(res, 400, "Invalid or expired token");
+      }
+
+      const user = await User.findOne({
+        _id: decoded.userId,
+        resetPasswordToken: token,
+        resetPasswordExpires: { $gt: Date.now() },
+      });
+
+      if (!user) {
+        return errorResponse(res, 400, "Invalid or expired token");
+      }
+
+      user.password = await bcrypt.hash(password, 10);
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpires = undefined;
+      await user.save();
+
+      return successResponse(res, 200, "Password reset successfully");
     } catch (error) {
       console.log(error.message);
       return errorResponse(res, 500, "Internal server error");
@@ -314,6 +354,7 @@ const authController = () => {
     verifyEmail,
     resendVerificationEmail,
     forgotPassword,
+    resetPassword,
     getCurrentUser,
     updateUser,
     logout,
