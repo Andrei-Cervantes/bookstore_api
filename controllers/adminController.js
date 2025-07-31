@@ -26,17 +26,41 @@ const usersController = () => {
         return errorResponse(res, 404, "User not found");
       }
 
-      return res.status(200).json({
-        success: true,
-        message: "User fetched successfully",
-        data: user,
-      });
+      return successResponse(res, 200, "User fetched successfully", { user });
     } catch (error) {
-      return res.status(500).json({ success: false, message: error.message });
+      return errorResponse(res, 500, error.message);
     }
   };
 
-  const setUserRole = async (req, res) => {};
+  const setUserRole = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = await User.findById(id);
+
+      if (!user) {
+        return errorResponse(res, 404, "User not found");
+      }
+
+      if (user.role === "admin") {
+        return errorResponse(res, 400, "Cannot change admin role");
+      }
+
+      const { role } = req.body;
+
+      if (!role || !["user", "librarian"].includes(role)) {
+        return errorResponse(res, 400, "Invalid role");
+      }
+
+      user.role = role;
+      await user.save();
+
+      return successResponse(res, 200, "User role changed successfully", {
+        user,
+      });
+    } catch (error) {
+      return errorResponse(res, 500, error.message);
+    }
+  };
 
   const deleteUser = async (req, res) => {};
 
