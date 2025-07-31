@@ -17,7 +17,24 @@ const usersController = () => {
     }
   };
 
-  const getSingleUser = async (req, res) => {};
+  const getSingleUser = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = await User.findById(id);
+
+      if (!user) {
+        return errorResponse(res, 404, "User not found");
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "User fetched successfully",
+        data: user,
+      });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  };
 
   const setUserRole = async (req, res) => {};
 
