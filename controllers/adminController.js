@@ -54,15 +54,28 @@ const usersController = () => {
       user.role = role;
       await user.save();
 
-      return successResponse(res, 200, "User role changed successfully", {
-        user,
-      });
+      return successResponse(res, 200, "User role changed successfully");
     } catch (error) {
       return errorResponse(res, 500, error.message);
     }
   };
 
-  const deleteUser = async (req, res) => {};
+  const deleteUser = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = await User.findById(id);
+
+      if (!user) {
+        return errorResponse(res, 404, "User not found");
+      }
+
+      await user.deleteOne();
+
+      return successResponse(res, 200, "User deleted successfully");
+    } catch (error) {
+      return errorResponse(res, 500, error.message);
+    }
+  };
 
   return { getAllUsers, getSingleUser, setUserRole, deleteUser };
 };
