@@ -38,7 +38,23 @@ const borrowController = () => {
     }
   };
 
-  const getUserBorrowRequests = async (req, res) => {};
+  const getUserBorrowRequests = async (req, res) => {
+    try {
+      const user = req.user._id;
+
+      const borrowRequests = await BorrowRequest.find({
+        user: user,
+      })
+        .populate("book", "title author")
+        .sort({ createdAt: -1 });
+
+      return successResponse(res, 200, "Borrow requests fetched successfully", {
+        borrowRequests,
+      });
+    } catch (error) {
+      return errorResponse(res, 500, "Internal server error");
+    }
+  };
 
   const returnBorrowRequest = async (req, res) => {};
 
