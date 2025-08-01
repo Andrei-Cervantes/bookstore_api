@@ -1,6 +1,6 @@
 import express from "express";
 import usersController from "../controllers/adminController.js";
-import { requireAdmin } from "../middleware/auth.js";
+import { requireRole } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -9,15 +9,15 @@ const { getAllUsers, getSingleUser, setUserRole, deleteUser } =
   usersController();
 
 // Admin Route for getting all users
-router.get("/users", requireAdmin, getAllUsers);
+router.get("/users", requireRole("admin"), getAllUsers);
 
 // Admin Route for getting a single user
-router.get("/users/:id", requireAdmin, getSingleUser);
+router.get("/users/:id", requireRole("admin"), getSingleUser);
 
 // Admin Route for setting user role (user, librarian, admin)
-router.put("/users/:id/role", requireAdmin, setUserRole);
+router.put("/users/:id/role", requireRole("admin"), setUserRole);
 
 // Admin Route for deleting a user
-router.delete("/users/:id", requireAdmin, deleteUser);
+router.delete("/users/:id", requireRole("admin"), deleteUser);
 
 export default router;

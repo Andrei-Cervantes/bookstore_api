@@ -27,9 +27,11 @@ export const authenticateUser = async (req, res, next) => {
   }
 };
 
-export const requireAdmin = async (req, res, next) => {
-  if (req.user.role !== "admin") {
-    return errorResponse(res, 403, "Forbidden");
-  }
-  next();
+export const requireRole = (...allowedRoles) => {
+  return (req, res, next) => {
+    if (!req.user || !allowedRoles.includes(req.user.role)) {
+      return errorResponse(res, 403, "Forbidden");
+    }
+    next();
+  };
 };
