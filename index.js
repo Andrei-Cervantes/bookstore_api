@@ -1,24 +1,26 @@
 import express from "express";
-import { PORT, mongoDBURL } from "./config.js";
+import CONFIG from "./config.js";
 import mongoose from "mongoose";
 import cors from "cors";
 
 // Import Routes
-import booksRoute from "./routes/booksRoute.js";
-import adminRoute from "./routes/adminRoute.js";
-import authRoute from "./routes/authRoute.js";
-import borrowRoute from "./routes/borrowRoute.js";
-import bookmarksRoute from "./routes/bookmarksRoute.js";
-import notesRoute from "./routes/notesRoute.js";
-import reviewsRoute from "./routes/reviewsRoute.js";
+import {
+  booksRoute,
+  adminRoute,
+  authRoute,
+  borrowRoute,
+  bookmarksRoute,
+  notesRoute,
+  reviewsRoute,
+} from "./routes/index.js";
 
 const app = express();
 mongoose
-  .connect(mongoDBURL)
+  .connect(CONFIG.MONGO_URI)
   .then(() => {
     console.log("App connected to database");
-    app.listen(PORT, () => {
-      console.log(`App is listening to port: ${PORT}`);
+    app.listen(CONFIG.PORT, () => {
+      console.log(`App is listening to port: ${CONFIG.PORT}`);
     });
   })
   .catch((error) => {
@@ -31,11 +33,10 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-const apiVersion = "/api/v1";
-app.use(`${apiVersion}/books`, booksRoute);
-app.use(`${apiVersion}/admin`, adminRoute);
-app.use(`${apiVersion}/auth`, authRoute);
-app.use(`${apiVersion}/borrow`, borrowRoute);
-app.use(`${apiVersion}/bookmarks`, bookmarksRoute);
-app.use(`${apiVersion}/notes`, notesRoute);
-app.use(`${apiVersion}/reviews`, reviewsRoute);
+app.use(`${CONFIG.API_VERSION}/books`, booksRoute);
+app.use(`${CONFIG.API_VERSION}/admin`, adminRoute);
+app.use(`${CONFIG.API_VERSION}/auth`, authRoute);
+app.use(`${CONFIG.API_VERSION}/borrow`, borrowRoute);
+app.use(`${CONFIG.API_VERSION}/bookmarks`, bookmarksRoute);
+app.use(`${CONFIG.API_VERSION}/notes`, notesRoute);
+app.use(`${CONFIG.API_VERSION}/reviews`, reviewsRoute);

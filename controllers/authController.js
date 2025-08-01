@@ -36,11 +36,10 @@ const authController = () => {
       }
 
       // create user
-      const hashedPassword = await bcrypt.hash(password, 10);
       const user = await User.create({
         name,
         email,
-        password: hashedPassword,
+        password,
       });
 
       // generate verification token
@@ -336,9 +335,19 @@ const authController = () => {
         return errorResponse(res, 401, "Unauthorized, invalid refresh token");
       }
 
-      const accessToken = generateAccessToken(user._id);
+      if (user.refreshToken !== refreshToken) {
+        return errorResponse(res, 401, "Unauthorized, invalid refresh token");
+      }
+
+      const newAccessToken = generateAccessToken(user._id);
+      const newRefreshToken = generateRefreshToken(user._id);
+
+      user.refreshToken = newRefreshToken;
+      await user.save();
+
       return successResponse(res, 200, "Token refreshed successfully", {
-        accessToken,
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
       });
     } catch (error) {
       return errorResponse(res, 500, "Internal server error");

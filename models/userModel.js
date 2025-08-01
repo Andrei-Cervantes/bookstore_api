@@ -50,4 +50,15 @@ const userSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Hash password before saving
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+// Compare provided refresh token with stored hashed refresh token
+
 export const User = mongoose.model("User", userSchema);
