@@ -319,6 +319,32 @@ const authController = () => {
     }
   };
 
+  const refreshToken = async (req, res) => {
+    try {
+      const { refreshToken } = req.body;
+
+      if (!refreshToken) {
+        return errorResponse(
+          res,
+          401,
+          "Unauthorized, refresh token is required"
+        );
+      }
+
+      const user = await User.findOne({ refreshToken });
+      if (!user) {
+        return errorResponse(res, 401, "Unauthorized, invalid refresh token");
+      }
+
+      const accessToken = generateAccessToken(user._id);
+      return successResponse(res, 200, "Token refreshed successfully", {
+        accessToken,
+      });
+    } catch (error) {
+      return errorResponse(res, 500, "Internal server error");
+    }
+  };
+
   const getCurrentUser = async (req, res) => {
     try {
       const user = await User.findById(req.user._id);
@@ -397,6 +423,7 @@ const authController = () => {
     forgotPassword,
     resetPassword,
     changePassword,
+    refreshToken,
     getCurrentUser,
     updateUser,
     logout,

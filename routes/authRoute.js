@@ -14,7 +14,7 @@ const {
   resendVerificationEmail,
   forgotPassword,
   resetPassword,
-  // refreshToken,
+  refreshToken,
   changePassword,
   updateUser,
 } = authController();
@@ -38,7 +38,7 @@ router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 
 // Route to refresh token (authenticated route)
-// router.post("/refresh-token", refreshToken);
+router.post("/refresh-token", requireAuth, refreshToken);
 
 // Route to change password (authenticated route)
 router.post("/change-password", requireAuth, changePassword);
