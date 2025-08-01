@@ -265,7 +265,7 @@ const authController = () => {
         return errorResponse(res, 400, "Invalid or expired token");
       }
 
-      user.password = await bcrypt.hash(password, 10);
+      user.password = password;
       user.resetPasswordToken = undefined;
       user.resetPasswordExpires = undefined;
       await user.save();
