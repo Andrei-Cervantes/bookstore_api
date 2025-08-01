@@ -130,17 +130,13 @@ const borrowController = () => {
       if (!borrowRequest)
         return errorResponse(res, 404, "Borrow request not found");
 
-      // check if request is approved
-      if (borrowRequest.status === "approved")
-        return errorResponse(res, 400, "Borrow request is already approved");
-
-      // check if request is rejected
-      if (borrowRequest.status === "rejected")
-        return errorResponse(res, 400, "Borrow request is already rejected");
-
-      // check if request is returned
-      if (borrowRequest.status === "returned")
-        return errorResponse(res, 400, "Borrow request is already returned");
+      if (["approved", "rejected", "returned"].includes(borrowRequest.status)) {
+        return errorResponse(
+          res,
+          400,
+          `Borrow request is already ${borrowRequest.status}`
+        );
+      }
 
       // check book availability
       const book = await Book.findById(borrowRequest.book);
@@ -166,7 +162,33 @@ const borrowController = () => {
     }
   };
 
-  const rejectBorrowRequest = async (req, res) => {};
+  const rejectBorrowRequest = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const borrowRequest = await BorrowRequest.findById(id);
+
+      if (!borrowRequest)
+        return errorResponse(res, 404, "Borrow request not found");
+
+      if (["approved", "rejected", "returned"].includes(borrowRequest.status)) {
+        return errorResponse(
+          res,
+          400,
+          `Borrow request is already ${borrowRequest.status}`
+        );
+      }
+
+      borrowRequest.status = "rejected";
+      await borrowRequest.save();
+
+      return successResponse(res, 200, "Borrow request rejected successfully", {
+        borrowRequest,
+      });
+    } catch (error) {
+      console.log(error.message);
+      return errorResponse(res, 500, "Internal server error");
+    }
+  };
 
   return {
     createBorrowRequest,
