@@ -29,7 +29,6 @@ const borrowRequestSchema = mongoose.Schema(
     },
     dueDate: {
       type: Date,
-      required: true,
     },
     // notes: {
     //   type: String,
