@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { User } from "../models/userModel.js";
-import { JWT_SECRET } from "../config.js";
+import CONFIG from "../config.js";
 import { errorResponse } from "../utils/formatResponse.js";
 
 export const authenticateUser = async (req, res, next) => {
@@ -13,7 +13,7 @@ export const authenticateUser = async (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, CONFIG.JWT_SECRET);
 
     const user = await User.findById(decoded.userId).select("-password");
     if (!user || !user.isVerified || !user.isActive) {

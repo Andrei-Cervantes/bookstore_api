@@ -9,10 +9,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import sendEmail from "../utils/sendEmail.js";
 import validator from "validator";
-import CONFIG, { JWT_SECRET } from "../config.js";
-
-// bcrypt configurations
-// const saltRounds = 10;
+import CONFIG from "../config.js";
 
 const authController = () => {
   const register = async (req, res) => {
@@ -142,7 +139,7 @@ const authController = () => {
     const { token } = req.params;
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, CONFIG.JWT_SECRET);
       const user = await User.findById(decoded.userId);
 
       // check if user exists
