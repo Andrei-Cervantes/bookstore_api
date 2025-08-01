@@ -131,6 +131,7 @@ const authController = () => {
         },
       });
     } catch (error) {
+      console.log(error.message);
       return errorResponse(res, 500, "Internal server error");
     }
   };

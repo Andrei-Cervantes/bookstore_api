@@ -9,12 +9,12 @@ export const generateToken = (userId) => {
 
 export const generateAccessToken = (userId) => {
   return jwt.sign({ userId }, CONFIG.ACCESS_TOKEN_SECRET, {
-    expiresIn: CONFIG.ACCESS_TOKEN_EXPIRES_IN,
+    expiresIn: CONFIG.ACCESS_TOKEN_EXPIRY,
   });
 };
 
 export const generateRefreshToken = (userId) => {
   return jwt.sign({ userId }, CONFIG.REFRESH_TOKEN_SECRET, {
-    expiresIn: CONFIG.REFRESH_TOKEN_EXPIRES_IN,
+    expiresIn: CONFIG.REFRESH_TOKEN_EXPIRY,
   });
 };
