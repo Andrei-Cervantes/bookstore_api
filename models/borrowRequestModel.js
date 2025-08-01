@@ -31,10 +31,10 @@ const borrowRequestSchema = mongoose.Schema(
       type: Date,
       required: true,
     },
-    notes: {
-      type: String,
-      default: "",
-    },
+    // notes: {
+    //   type: String,
+    //   default: "",
+    // },
   },
   {
     timestamps: true,
