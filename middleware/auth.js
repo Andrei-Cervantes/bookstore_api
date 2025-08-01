@@ -3,7 +3,7 @@ import { User } from "../models/userModel.js";
 import { JWT_SECRET } from "../config.js";
 import { errorResponse } from "../utils/formatResponse.js";
 
-export const requireAuth = async (req, res, next) => {
+export const authenticateToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader?.startsWith("Bearer ")) {

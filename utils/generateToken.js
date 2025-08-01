@@ -1,14 +1,20 @@
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config.js";
+import CONFIG from "../config.js";
 
 export const generateToken = (userId) => {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "15m" });
+  return jwt.sign({ userId }, CONFIG.JWT_SECRET, {
+    expiresIn: CONFIG.JWT_EXPIRES_IN,
+  });
 };
 
 export const generateAccessToken = (userId) => {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "15m" });
+  return jwt.sign({ userId }, CONFIG.ACCESS_TOKEN_SECRET, {
+    expiresIn: CONFIG.ACCESS_TOKEN_EXPIRES_IN,
+  });
 };
 
 export const generateRefreshToken = (userId) => {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "7d" });
+  return jwt.sign({ userId }, CONFIG.REFRESH_TOKEN_SECRET, {
+    expiresIn: CONFIG.REFRESH_TOKEN_EXPIRES_IN,
+  });
 };

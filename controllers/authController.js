@@ -9,7 +9,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import sendEmail from "../utils/sendEmail.js";
 import validator from "validator";
-import { JWT_SECRET } from "../config.js";
+import CONFIG, { JWT_SECRET } from "../config.js";
 
 // bcrypt configurations
 // const saltRounds = 10;
@@ -330,26 +330,38 @@ const authController = () => {
         );
       }
 
-      const user = await User.findOne({ refreshToken });
+      // Decode refresh token
+      let decoded;
+      try {
+        decoded = jwt.verify(refreshToken, CONFIG.REFRESH_TOKEN_SECRET);
+      } catch (err) {
+        return errorResponse(res, 401, "Unauthorized, invalid refresh token");
+      }
+
+      // find user by id
+      const user = await User.findById(decoded.userId);
       if (!user) {
+        return errorResponse(res, 401, "Unauthorized, no user found");
+      }
+
+      // compare refresh token
+      const isValid = await user.verifyRefreshToken(refreshToken);
+      if (!isValid) {
         return errorResponse(res, 401, "Unauthorized, invalid refresh token");
       }
 
-      if (user.refreshToken !== refreshToken) {
-        return errorResponse(res, 401, "Unauthorized, invalid refresh token");
-      }
-
+      // generate new tokens
       const newAccessToken = generateAccessToken(user._id);
       const newRefreshToken = generateRefreshToken(user._id);
 
-      user.refreshToken = newRefreshToken;
-      await user.save();
+      await user.setRefreshToken(newRefreshToken);
 
       return successResponse(res, 200, "Token refreshed successfully", {
         accessToken: newAccessToken,
         refreshToken: newRefreshToken,
       });
     } catch (error) {
+      console.log(error.message);
       return errorResponse(res, 500, "Internal server error");
     }
   };

@@ -1,6 +1,6 @@
 import express from "express";
 import authController from "../controllers/authController.js";
-import { requireAuth } from "../middleware/auth.js";
+import { authenticateToken } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -38,18 +38,18 @@ router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 
 // Route to refresh token (authenticated route)
-router.post("/refresh-token", requireAuth, refreshToken);
+router.post("/refresh-token", authenticateToken, refreshToken);
 
 // Route to change password (authenticated route)
-router.post("/change-password", requireAuth, changePassword);
+router.post("/change-password", authenticateToken, changePassword);
 
 // Route to get current user details (authenticated route)
-router.get("/me", requireAuth, getCurrentUser);
+router.get("/me", authenticateToken, getCurrentUser);
 
 // Route to update user details (authenticated route)
-router.put("/me", requireAuth, updateUser);
+router.put("/me", authenticateToken, updateUser);
 
 // Route to logout current user (authenticated route)
-router.post("/logout", requireAuth, logout);
+router.post("/logout", authenticateToken, logout);
 
 export default router;

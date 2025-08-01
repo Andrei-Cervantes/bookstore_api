@@ -59,6 +59,17 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+// Hash and store refresh token
+userSchema.methods.setRefreshToken = async function (token) {
+  const salt = await bcrypt.genSalt(10);
+  this.refreshToken = await bcrypt.hash(token, salt);
+  await this.save();
+};
+
 // Compare provided refresh token with stored hashed refresh token
+userSchema.methods.verifyRefreshToken = async function (token) {
+  if (!this.refreshToken) return false;
+  return bcrypt.compare(token, this.refreshToken);
+};
 
 export const User = mongoose.model("User", userSchema);
