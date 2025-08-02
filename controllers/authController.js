@@ -114,7 +114,7 @@ const authController = () => {
       const refreshToken = generateRefreshToken(user._id);
 
       // update user with refresh token
-      user.refreshToken = refreshToken;
+      user.setRefreshToken(refreshToken);
       await user.save();
 
       // send response
@@ -333,7 +333,7 @@ const authController = () => {
       try {
         decoded = jwt.verify(refreshToken, CONFIG.REFRESH_TOKEN_SECRET);
       } catch (err) {
-        return errorResponse(res, 401, "Unauthorized, invalid refresh token");
+        return errorResponse(res, 401, "Unauthorized, token not decoded");
       }
 
       // find user by id
