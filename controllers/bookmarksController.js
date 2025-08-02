@@ -16,7 +16,7 @@ const bookmarksController = () => {
         user: req.user._id,
         book: bookId,
       });
-
+      
       if (hasBookmark) {
         return errorResponse(res, 400, "Bookmark already exists");
       }
