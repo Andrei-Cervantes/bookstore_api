@@ -44,9 +44,9 @@ const swaggerOptions = {
       security: [{ bearerAuth: [] }],
     },
     tags: [
-      { name: "Books", description: "Book management operations" },
-      { name: "Admin", description: "Admin operations" },
       { name: "Auth", description: "Authentication operations" },
+      { name: "Admin", description: "Admin operations" },
+      { name: "Books", description: "Book management operations" },
       { name: "Borrow", description: "Borrow operations" },
       { name: "Bookmarks", description: "Bookmark operations" },
       { name: "Notes", description: "Note operations" },
