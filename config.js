@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const CONFIG = {
-  API_VERSION: "/api/v1",
+  API_VERSION: process.env.API_VERSION,
   PORT: process.env.PORT,
   MONGO_URI: process.env.MONGO_URI,
   SMTP_USER: process.env.SMTP_USER,
