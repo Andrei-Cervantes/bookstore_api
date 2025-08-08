@@ -1,5 +1,6 @@
 import express from "express";
 import booksController from "../controllers/booksController.js";
+import { authenticateUser, requireRole } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -155,7 +156,12 @@ const { createBook, getAllBooks, getSingleBook, updateBook, deleteBook } =
  *       500:
  *         description: Server error
  */
-router.post("/", createBook);
+router.post(
+  "/",
+  authenticateUser,
+  requireRole("admin", "librarian"),
+  createBook
+);
 
 /**
  * @swagger
@@ -246,7 +252,12 @@ router.get("/:id", getSingleBook);
  *       500:
  *         description: Server error
  */
-router.put("/:id", updateBook);
+router.put(
+  "/:id",
+  authenticateUser,
+  requireRole("admin", "librarian"),
+  updateBook
+);
 
 /**
  * @swagger
@@ -276,6 +287,11 @@ router.put("/:id", updateBook);
  *       500:
  *         description: Server error
  */
-router.delete("/:id", deleteBook);
+router.delete(
+  "/:id",
+  authenticateUser,
+  requireRole("admin", "librarian"),
+  deleteBook
+);
 
 export default router;
