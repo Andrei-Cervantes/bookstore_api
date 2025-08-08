@@ -110,6 +110,55 @@ const { createBook, getAllBooks, getSingleBook, updateBook, deleteBook } =
  *           description: Success message
  *         data:
  *           $ref: '#/components/schemas/Book'
+ *     Book:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: Unique book identifier
+ *         title:
+ *           type: string
+ *           description: Book title
+ *         author:
+ *           type: string
+ *           description: Book author
+ *         publishYear:
+ *           type: number
+ *           description: Year the book was published
+ *         genre:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: Book genres
+ *         pages:
+ *           type: number
+ *           description: Number of pages
+ *         language:
+ *           type: string
+ *           description: Book language
+ *         description:
+ *           type: string
+ *           description: Book description
+ *         coverImageUrl:
+ *           type: string
+ *           description: URL to book cover image
+ *         location:
+ *           type: string
+ *           description: Physical location of the book
+ *         availability:
+ *           type: boolean
+ *           description: Whether the book is available for borrowing
+ *         isArchived:
+ *           type: boolean
+ *           description: Whether the book is archived
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: Book creation timestamp
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: Book last update timestamp
  */
 
 /**
@@ -118,6 +167,8 @@ const { createBook, getAllBooks, getSingleBook, updateBook, deleteBook } =
  *   post:
  *     summary: Create a new book
  *     tags: [Books]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -153,6 +204,10 @@ const { createBook, getAllBooks, getSingleBook, updateBook, deleteBook } =
  *                   type: array
  *                   items:
  *                     type: string
+ *       401:
+ *         description: Unauthorized - Authentication required
+ *       403:
+ *         description: Forbidden - Admin or Librarian role required
  *       500:
  *         description: Server error
  */
@@ -214,6 +269,8 @@ router.get("/:id", getSingleBook);
  *   put:
  *     summary: Update a book
  *     tags: [Books]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -247,6 +304,10 @@ router.get("/:id", getSingleBook);
  *                   type: array
  *                   items:
  *                     type: string
+ *       401:
+ *         description: Unauthorized - Authentication required
+ *       403:
+ *         description: Forbidden - Admin or Librarian role required
  *       404:
  *         description: Book not found
  *       500:
@@ -265,6 +326,8 @@ router.put(
  *   delete:
  *     summary: Delete a book
  *     tags: [Books]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -282,6 +345,10 @@ router.put(
  *               properties:
  *                 message:
  *                   type: string
+ *       401:
+ *         description: Unauthorized - Authentication required
+ *       403:
+ *         description: Forbidden - Admin or Librarian role required
  *       404:
  *         description: Book not found
  *       500:
