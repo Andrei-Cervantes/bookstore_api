@@ -291,17 +291,10 @@ router.post("/forgot-password", forgotPassword);
 
 /**
  * @swagger
- * /api/v1/auth/reset-password/{token}:
+ * /api/v1/auth/reset-password:
  *   post:
  *     summary: Reset password using token
  *     tags: [Auth]
- *     parameters:
- *       - in: path
- *         name: token
- *         required: true
- *         schema:
- *           type: string
- *         description: Password reset token
  *     requestBody:
  *       required: true
  *       content:
@@ -315,6 +308,9 @@ router.post("/forgot-password", forgotPassword);
  *                 type: string
  *                 minLength: 8
  *                 description: New password (must be strong)
+ *               token:
+ *                 type: string
+ *                 description: Password reset token
  *     responses:
  *       200:
  *         description: Password reset successfully
@@ -323,7 +319,7 @@ router.post("/forgot-password", forgotPassword);
  *       500:
  *         description: Server error
  */
-router.post("/reset-password/:token", resetPassword);
+router.post("/reset-password", resetPassword);
 
 /**
  * @swagger
