@@ -6,7 +6,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "build": "npm run check",
+    "check": "node --check index.js",
+    "validate": "node --check index.js && node --check controllers/*.js && node --check models/*.js && node --check routes/*.js"
   },
   "keywords": [],
   "author": "",

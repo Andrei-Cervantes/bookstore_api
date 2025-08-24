@@ -155,6 +155,7 @@ const authController = () => {
 
       return successResponse(res, 200, "Email verified successfully");
     } catch (error) {
+      console.log(error);
       return errorResponse(res, 500, "Internal server error");
     }
   };
@@ -189,6 +190,7 @@ const authController = () => {
 
       return successResponse(res, 200, "Verification email sent successfully");
     } catch (error) {
+      console.log(error);
       return errorResponse(res, 500, error.message);
     }
   };
@@ -376,6 +378,7 @@ const authController = () => {
         isActive: user.isActive,
       });
     } catch (error) {
+      console.log(error);
       return errorResponse(res, 500, "Internal server error");
     }
   };
@@ -418,6 +421,7 @@ const authController = () => {
       await user.save();
       return successResponse(res, 200, "User updated successfully");
     } catch (error) {
+      console.log(error);
       return errorResponse(res, 500, "Internal server error");
     }
   };
@@ -430,6 +434,7 @@ const authController = () => {
 
       return successResponse(res, 200, "Logged out successfully");
     } catch (error) {
+      console.log(error);
       return errorResponse(res, 500, "Internal server error");
     }
   };
